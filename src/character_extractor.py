@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 import imutils
 from skimage import measure
-from contours_utils import *
+from src.contours_utils import *
 
 class CharExtractor:
     def __init__(self):

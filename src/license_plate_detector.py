@@ -1,7 +1,7 @@
 import cv2 as cv
 import imutils
 import numpy as np
-from contours_utils import * 
+from src.contours_utils import * 
 
 
 class LicensePlateDetector:
