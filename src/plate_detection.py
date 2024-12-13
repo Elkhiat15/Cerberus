@@ -86,3 +86,54 @@ class LicensePlateDetector:
         return final_img
 
 
+    def find_and_process_contours(self, final_img, img):
+        """Find and process contours to extract the desired region"""
+        # Find contours
+        contours, _ = cv.findContours(final_img.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_NONE)
+        
+        # Merge close contours
+        merged_contours = agglomerative_cluster(list(contours), 'x')
+        sorted_contours = sorted(merged_contours, key=cv.contourArea, reverse=True)
+        
+        # Process and crop contours
+        for cnt in sorted_contours:
+            area = cv.contourArea(cnt)
+            _, _, w1, h1 = cv.boundingRect(cnt)
+            
+            # Filtering conditions
+            if w1 > 300 or h1 >= 150:
+                continue
+            
+            if 2200 < area < 17500:
+                contour_perimeter = cv.arcLength(cnt, True)
+                approx = cv.approxPolyDP(cnt, 0.02 * contour_perimeter, True)
+                x, y, w, h = cv.boundingRect(approx)
+                aspect_ratio = w / float(h)
+                
+                if 1.5 <= aspect_ratio <= 6:
+                    if y == 0:
+                        return img[y:y + h + 5, x:x + w]
+                    else:
+                        return img[y - 6:y + h + 5, x:x + w]
+        
+        return np.zeros_like(img)
+
+    def detect(self, img):
+        """License Plate Detection main method"""
+        # Preprocessing
+        img, gray = self.preprocess_image(img)
+        
+        # Black hat morphology
+        black_hat_image = self.apply_black_hat_morphology(gray)
+        
+        # Thresholding and ratio calculation
+        thresholded_image, ratio = self.threshold_and_analyze_image(black_hat_image)
+        
+        # Gradient and morphological processing
+        closed_image = self.process_sobel_gradient(thresholded_image, ratio)
+        
+        # Image refinement
+        final_img = self.refine_image(closed_image, ratio)
+        
+        # Contour processing and cropping
+        return self.find_and_process_contours(final_img, img)
