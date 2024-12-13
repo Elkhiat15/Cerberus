@@ -21,14 +21,14 @@ arabic_translation_map = {
     'dal': 'د',
     "fa'": 'ف',
     'gem': 'ج',
-    "ha'": 'ح',
+    "ha'": 'هـ',
     'lam': 'ل',
     'noon': 'ن',
     'qaf': 'ق',
     "ra'": 'ر',
     'sad': 'ص',
     'seen': 'س',
-    "ta'": 'ت',
+    "ta'": 'ط',
     'waw': 'و',
     "ya'": 'ي'
 }
@@ -50,14 +50,11 @@ def test_license_plate(image_path):
     else:
         print("License plate text could not be recognized.")
 
-    # Display the license plate image with contours around detected characters
-    plate_image = cv.cvtColor(plate_image, cv.COLOR_BGR2RGB)  # Convert to RGB for correct display in matplotlib
+    plate_image = cv.cvtColor(plate_image, cv.COLOR_BGR2RGB)  
     plt.imshow(plate_image)
-    plt.axis('off')  # Turn off axis labels
+    plt.axis('off')  
     plt.show()
 
-# Path to your image file
-image_path = '0028.jpg' 
+image_path = 'test_images/test.jpeg' 
 
-# Run the test
 test_license_plate(image_path)

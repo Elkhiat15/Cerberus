@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
-from character_extractor import *
-from plate_enhancer import *
-from license_plate_detector import *
+from src.plate_enhancer import *
+from src.character_extractor import *
+from src.license_plate_detector import *
 from joblib import load
 from skimage.feature import hog
 
@@ -15,12 +15,12 @@ def process_image(image):
 
     plate = lpd.detect(car_image)
     enhanced_plate = enhancer.enhance_plate(plate)
-    car_plate , flag, car_letters = extractor.extractChars(enhanced_plate)
+    car_plate , flag, car_letters = extractor.extract_chars(enhanced_plate)
     
     car_plate = np.array(car_plate)
     result = []
     if flag == 1:
-        model = load("trained_model.pkl", mmap_mode="r")
+        model = load("src/model.pkl", mmap_mode="r")
         data = []
         car_letters = sorted(car_letters ,key=lambda x: x[1], reverse = True)
         for i in car_letters:
