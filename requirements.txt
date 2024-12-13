@@ -1,0 +1,8 @@
+opencv-python
+imutils 
+numpy 
+pandas 
+oblib 
+scikit-image 
+scikit-learn 
+matplotlib
