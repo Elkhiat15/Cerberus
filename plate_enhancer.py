@@ -93,3 +93,26 @@ class LicensePlateEnhancer:
             contour_solidity < 0.8):
             self.black_mask = cv.bitwise_or(self.black_mask, current_label_mask)
 
+    def enhance_plate(self, plate_img):
+        """ Main enhancement method """
+        # Validate input
+        if not self._is_validate_input(plate_img):
+            return []
+        
+        # Convert and resize image
+        self.preprocessed_image, self.plate_img = self._convert_and_resize_image(plate_img)
+        
+        # Apply thresholding
+        self.preprocessed_image = self._apply_thresholding(self.preprocessed_image)
+        
+        # Process connected components
+        black_mask = self._process_connected_components(
+            self.preprocessed_image, 
+            self.plate_img
+        )
+        
+        # Final morphological operation
+        morphological_kernel = cv.getStructuringElement(cv.MORPH_RECT, (1,3))
+        final_enhanced_image = cv.dilate(black_mask, morphological_kernel, iterations=2)
+        
+        return [final_enhanced_image, self.plate_img]
