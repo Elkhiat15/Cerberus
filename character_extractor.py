@@ -46,4 +46,23 @@ class CharExtractor:
         
         return is_valid_area and contour_solidity < 0.8 and ((center_line > contour_y and center_line < contour_y + contour_height) or (center_line <= contour_y))
 
-   
+    def merge_and_cluster_contours(self):
+        self.filtered_contours = agglomerative_cluster(self.filtered_contours, 'y')  
+        self.filtered_contours = merge_intersecting_contours(self.filtered_contours) 
+        return agglomerative_cluster(self.filtered_contours, 'x', threshold_distance=2)
+
+    def extract_car_letters(self):
+        for cnt in self.filtered_contours:
+            (char_x, char_y, char_width, char_height) = cv.boundingRect(cnt)
+            character_image = self.img[1].copy()[char_y:char_y + char_height, char_x:char_x + char_width]
+            self.extracted_characters.append((character_image, char_x)) 
+            cv.rectangle(self.img[1], (char_x, char_y), (char_x + char_width, char_y + char_height), (0, 255, 0), 1)
+        
+        return self.extracted_characters
+
+    def determine_is_valid_plate(self):
+        if 2 <= len(self.extracted_characters) <= 7:
+            return 1
+        else:
+            print(len(self.extracted_characters))
+            return 0
