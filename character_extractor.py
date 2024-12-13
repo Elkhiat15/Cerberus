@@ -10,6 +10,30 @@ class CharExtractor:
         self.extracted_characters = []
         self.annotated_image = None
 
+    def extract_chars(self, img):
+        if img == []:
+            return img
+        
+        self.img = img
+        self.annotated_image = img[1].copy()
+        
+        # Preprocess the image
+        self.img[0] = self.preprocess_image(self.img[0])
+        
+        # Find contours and filter them
+        labels = measure.label(self.img[0], background=0)
+        self.filtered_contours = self.find_and_filter_contours(labels)
+        
+        # Merge and cluster contours
+        self.filtered_contours = self.merge_and_cluster_contours()
+        
+        # Extract car letters
+        self.extracted_characters = self.extract_car_letters()
+        
+        # Determine is_valid_plate based on the number of car letters
+        is_valid_plate = self.determine_is_valid_plate()
+        
+        return [self.img[1], is_valid_plate, self.extracted_characters]
 
     def preprocess_image(self, image):
         dilation_kernel = cv.getStructuringElement(cv.MORPH_RECT, (1, 3))
