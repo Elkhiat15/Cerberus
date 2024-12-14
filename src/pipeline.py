@@ -20,7 +20,7 @@ def process_image(image):
     car_plate = np.array(car_plate)
     result = []
     if flag == 1:
-        model = load("src/model.pkl", mmap_mode="r")
+        model = load("src/model_svm.pkl", mmap_mode="r")
         data = []
         car_letters = sorted(car_letters ,key=lambda x: x[1], reverse = True)
         for i in car_letters:
