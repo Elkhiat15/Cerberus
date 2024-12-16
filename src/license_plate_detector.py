@@ -15,10 +15,10 @@ class LicensePlateDetector:
         img = imutils.resize(img, width=1000, height=1000 * image_shape[0] // image_shape[1])
         
         gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-        gray = gray[gray.shape[0]*2//5:gray.shape[0], :]
+        gray = gray[gray.shape[0]*2//5:gray.shape[0] - 60, :] # crop the image, (- 60) to remove camera watermark 
         gray = cv.GaussianBlur(gray, (3,3), 0)
         
-        img = img[img.shape[0]*2//5:img.shape[0], :]
+        img = img[img.shape[0]*2//5:img.shape[0] - 60, :]
         return img, gray
 
     def apply_black_hat_morphology(self, gray):

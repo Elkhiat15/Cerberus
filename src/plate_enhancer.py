@@ -106,13 +106,13 @@ class LicensePlateEnhancer:
         self.preprocessed_image = self._apply_thresholding(self.preprocessed_image)
         
         # Process connected components
-        black_mask = self._process_connected_components(
+        filtered_contours = self._process_connected_components(
             self.preprocessed_image, 
             self.plate_img
         )
         
         # Final morphological operation
         morphological_kernel = cv.getStructuringElement(cv.MORPH_RECT, (1,3))
-        final_enhanced_image = cv.dilate(black_mask, morphological_kernel, iterations=2)
+        final_enhanced_image = cv.dilate(filtered_contours, morphological_kernel, iterations=2)
         
         return [final_enhanced_image, self.plate_img]
