@@ -31,8 +31,8 @@ class LicensePlateEnhancer:
         """ Apply binary thresholding to the image """
         # Binary thresholding
         thresholded_image = thresholded_image.copy()
-        thresholded_image[thresholded_image < 120] = 0
-        thresholded_image[thresholded_image >= 120] = 255
+        thresholded_image[thresholded_image < 125] = 0
+        thresholded_image[thresholded_image >= 125] = 255
         
         # Dilation
         dilation_kernel = cv.getStructuringElement(cv.MORPH_RECT, (1,4))
@@ -85,9 +85,9 @@ class LicensePlateEnhancer:
         self.white_mask = cv.bitwise_or(self.white_mask, current_label_mask)
         
         # Apply filtering criteria
-        if (area >= 15 and area < 600 and 
+        if (area >= 15 and area < 650 and 
             height_ratio < 0.9 and 
-            width_ratio < 0.2 and 
+            width_ratio < 0.3 and 
             aspect_ratio < 2 and 
             contour_solidity > 0.2 and 
             contour_solidity < 0.8):

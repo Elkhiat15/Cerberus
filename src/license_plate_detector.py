@@ -69,8 +69,8 @@ class LicensePlateDetector:
         dilated_2 = cv.dilate(eroded_2, None, iterations=3)
         
         # Thresholding
-        dilated_2[dilated_2 < 140] = 0
-        dilated_2[dilated_2 >= 140] = 255
+        dilated_2[dilated_2 < 130] = 0
+        dilated_2[dilated_2 >= 130] = 255
         
         # Additional erosion based on ratio
         eroded_3 = cv.erode(dilated_2, None, iterations=2)
