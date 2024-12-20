@@ -6,3 +6,4 @@ joblib
 scikit-image 
 scikit-learn 
 matplotlib
+PyQt6
