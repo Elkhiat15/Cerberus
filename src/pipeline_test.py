@@ -1,6 +1,6 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
-
+import os 
 from core.pipeline import GateAccessController
 
 arabic_translation_map = {
@@ -32,30 +32,37 @@ arabic_translation_map = {
     "ya'": "ي",
 }
 
-controller = GateAccessController(
-    model_path="data/models/model_svm.pkl",
-    authorized_plates=["1 ن ط و"],
-    translation_map=arabic_translation_map,
-)
+def run_test(image_path):
 
-test_image = cv.imread("tests/test_images/0015.jpg")
-result = controller.process_image(test_image)
+    controller = GateAccessController(
+        model_path="data/models/model_svm.pkl",
+        authorized_plates=["1 ن ط و"],
+        translation_map=arabic_translation_map,
+    )
 
-if result.success:
-    # Get both raw and Arabic versions
-    raw_plate = " ".join(result.characters)
-    arabic_plate = "No Arabic characters detected"
-    if result.arabic_characters:
-        arabic_plate = " ".join(result.arabic_characters)
+    path = os.path.join("tests", "test_images", image_path)
+    # test_image = cv.imread("tests/test_images/00.jpg")
+    test_image = cv.imread(path)
+    result = controller.process_image(test_image)
 
-    print(f"Raw detected plate: {raw_plate}")
-    print(f"Arabic plate: {arabic_plate}")
+    if result.success:
+        # Get both raw and Arabic versions
+        raw_plate = " ".join(result.characters)
+        arabic_plate = "No Arabic characters detected"
+        if result.arabic_characters:
+            arabic_plate = " ".join(result.arabic_characters)
 
-    access_granted = controller.verify_access(arabic_plate)
-    print(f"Access granted: {access_granted}")
+        print(f"Raw detected plate: {raw_plate}")
+        print(f"Arabic plate: {arabic_plate}")
 
-    plt.imshow(cv.cvtColor(result.plate_image, cv.COLOR_BGR2RGB))
-    plt.show()
+        access_granted = controller.verify_access(arabic_plate)
+        print(f"Access granted: {access_granted}")
 
-else:
-    print(f"Error: {result.error_message}")
+        plt.imshow(cv.cvtColor(result.plate_image, cv.COLOR_BGR2RGB))
+        plt.show()
+
+    else:
+        print(f"Error: {result.error_message}")
+
+
+run_test("0021.jpg")
