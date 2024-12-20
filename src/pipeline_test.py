@@ -1,18 +1,18 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
 
-from core.pipeline import process_image
+from core.pipeline import GateAccessController
 
 arabic_translation_map = {
-    "1": "١",
-    "2": "٢",
-    "3": "٣",
-    "4": "٤",
-    "5": "٥",
-    "6": "٦",
-    "7": "٧",
-    "8": "٨",
-    "9": "٩",
+    "1": "1",
+    "2": "2",
+    "3": "3",
+    "4": "4",
+    "5": "5",
+    "6": "6",
+    "7": "7",
+    "8": "8",
+    "9": "9",
     "Mem": "م",
     "aen": "ع",
     "alf": "ا",
@@ -32,29 +32,30 @@ arabic_translation_map = {
     "ya'": "ي",
 }
 
+controller = GateAccessController(
+    model_path="data/models/model_svm.pkl",
+    authorized_plates=["1 ن ط و"],
+    translation_map=arabic_translation_map,
+)
 
-def test_license_plate(image_path):
-    image = cv.imread(image_path)
+test_image = cv.imread("tests/test_images/0015.jpg")
+result = controller.process_image(test_image)
 
-    plate_image, recognized_text = process_image(image)
+if result.success:
+    # Get both raw and Arabic versions
+    raw_plate = " ".join(result.characters)
+    arabic_plate = "No Arabic characters detected"
+    if result.arabic_characters:
+        arabic_plate = " ".join(result.arabic_characters)
 
-    arabic_plate = [arabic_translation_map.get(value, "") for value in recognized_text]
-    arabic_plate.reverse()
+    print(f"Raw detected plate: {raw_plate}")
+    print(f"Arabic plate: {arabic_plate}")
 
-    if len(recognized_text) > 0:
-        print(f"Recognized Text: {' '.join(recognized_text)}")
-        print(f"Arabic Text: {' '.join(arabic_plate)}")
+    access_granted = controller.verify_access(arabic_plate)
+    print(f"Access granted: {access_granted}")
 
-    else:
-        print("License plate text could not be recognized.")
-
-    plate_image = cv.cvtColor(plate_image, cv.COLOR_BGR2RGB)
-    plt.imshow(plate_image)
-    plt.axis("off")
+    plt.imshow(cv.cvtColor(result.plate_image, cv.COLOR_BGR2RGB))
     plt.show()
 
-
-image_path = "tests/test_images/test.jpeg"
-
-test_license_plate(image_path)
-
+else:
+    print(f"Error: {result.error_message}")
