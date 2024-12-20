@@ -13,6 +13,10 @@ class CharExtractor:
         self.annotated_image = None
 
     def extract_chars(self, img):
+        self.filtered_contours = []
+        self.extracted_characters = []
+        self.annotated_image = None
+
         if img == []:
             return img
 
