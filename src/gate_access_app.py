@@ -266,7 +266,7 @@ class GateAccessApp(QMainWindow):
     def remove_plate(self):
         plate = self.plate_input.text().strip()
         if plate:
-            self.controller.remove_authorized_plate(plate)
+            self.controller.remove_authorized_plate(plate[::-1])
             QMessageBox.information(
                 self, "Success", f"Plate {plate} removed from authorized list"
             )
