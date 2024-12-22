@@ -217,9 +217,23 @@ class GateAccessApp(QMainWindow):
         )
         self.result_label.setMinimumHeight(100)
 
+        self.result_image = QLabel()
+        self.result_image.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.result_image.setMinimumSize(600, 400)
+        self.result_image.setStyleSheet(
+            """
+            QLabel {
+                border: 2px solid #444;
+                border-radius: 4px;
+                background-color: #2a2a2a;
+            }
+        """
+        )
+
         right_layout.addWidget(self.image_label)
         right_layout.addLayout(button_layout)
         right_layout.addWidget(self.result_label)
+        right_layout.addWidget(self.result_image)
 
         # Add panels to main layout
         main_layout.addWidget(left_panel)
@@ -316,6 +330,23 @@ class GateAccessApp(QMainWindow):
             result_text += "</div>"
 
             self.result_label.setText(result_text)
+
+
+            if result.plate_image is not None:
+                rgb_image = cv2.cvtColor(result.plate_image, cv2.COLOR_BGR2RGB)
+                h, w, ch = rgb_image.shape
+                bytes_per_line = ch * w
+
+                qt_image = QImage(
+                    rgb_image.data, w, h, bytes_per_line, QImage.Format.Format_RGB888
+                )
+                pixmap = QPixmap.fromImage(qt_image)
+                scaled_pixmap = pixmap.scaled(
+                    self.result_image.size(),
+                    Qt.AspectRatioMode.KeepAspectRatio,
+                    Qt.TransformationMode.SmoothTransformation,
+                )
+                self.result_image.setPixmap(scaled_pixmap)
         else:
             self.result_label.setText(
                 f"<p style='color: #F44336;'>Error: {result.error_message}</p>"
