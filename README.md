@@ -1,3 +1,6 @@
+![leo-1](https://github.com/user-attachments/assets/1e644c61-911a-4079-90fa-655288feb397)
+
+
 # Cerberus a Gate Access Controller
 
 ## Table of Contents
