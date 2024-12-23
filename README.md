@@ -11,7 +11,7 @@
 
 # System Description
 
-<h3>Agate is open for specific cars based on their plate number. This
+<h3>A gate is open for specific cars based on their plate number. This
 project aims to detect the plates of cars entering the high privilege
 access buildings and areas to increase safety and make entering
 easier and faster.
