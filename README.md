@@ -42,6 +42,6 @@ python src/gate_access_app.py
 ```bash
 python -m venv venv
 .\venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r requirements
 python src/gate_access_app.py
 ```
