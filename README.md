@@ -3,7 +3,7 @@
 
 # Cerberus a Gate Access Controller
 
-## Table of Contents
+## Table of Contents 
 
 - [System Description](#about)
 - [System Architecture](#system-architecture)
